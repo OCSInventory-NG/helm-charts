@@ -92,9 +92,9 @@ ingress:
     nginx.ingress.kubernetes.io/app-root: /ocsreports/
     # nginx.ingress.kubernetes.io/whitelist-source-range: ""
   basicauth:
-    enabled: true
-    username: "test"
-    password: "test"
+    enabled: false
+    username: ""
+    password: ""
     authRealm: "Authentication Required"
     paths:
       - "/ocsapi"
