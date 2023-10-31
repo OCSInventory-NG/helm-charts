@@ -1,0 +1,36 @@
+apiVersion: v1
+entries:
+  ocsinventory:
+  - apiVersion: v2
+    appVersion: 2.12.1
+    created: "2023-10-31T14:32:11.827482059Z"
+    dependencies:
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.1.3
+    description: Open Computers and Software Inventory Next Generation is an assets
+      management and deployment solution.
+    digest: 32692538af79f895b447375087a860209a92faf1eed27c9883d637b42d65974e
+    home: https://ocsinventory-ng.org/
+    icon: https://ocsinventory-ng.org/wp-content/uploads/2019/04/cropped-AUTOCOLLANT-01-1-192x192.png
+    keywords:
+    - ocsinventory
+    - assets
+    - management
+    - deployment
+    - inventory
+    - http
+    - web
+    maintainers:
+    - email: contact@ocsinventory-ng.org
+      name: OCSInventory Team
+    name: ocsinventory
+    sources:
+    - http://wiki.ocsinventory-ng.org
+    - https://github.com/OCSInventory-NG/OCSInventory-Docker-Image
+    type: application
+    urls:
+    - https://github.com/OCSInventory-NG/helm-charts/releases/download/ocsinventory-1.0.0/ocsinventory-1.0.0.tgz
+    version: 1.0.0
+generated: "2023-10-31T14:32:11.827495359Z"
