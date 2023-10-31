@@ -39,27 +39,38 @@ If you have any issues using any other version of Kubernetes / Helm charts, feel
 
 ## Get the Chart
 
+### Add Helm repository
+
 ```bash
-git clone https://github.com/OCSInventory-NG/helm-charts
+helm repo add ocsinventory https://ocsinventory-ng.github.io/helm-charts
+helm repo update
 ```
 
-## Installing the Chart
+### Retrieve the values.yaml 
+
+```bash
+wget https://raw.githubusercontent.com/OCSInventory-NG/helm-charts/main/charts/ocsinventory/values.yaml
+```
+
+Note : all parameters on values.yaml are explained in the "Values" section of the README
+
+### Installing the Chart
 
 ```bash
 cd OCSInventory-Helm-Chart
-helm -n <namespace> install <release_name> ./ -f ./values.yaml --create-namespace
+helm -n <namespace> install <release_name> ocsinventory/ocsinventory -f ./values.yaml --create-namespace
 ```
 
-## Upgrading the Chart
+### Upgrading the Chart
 
 ```bash
-helm -n <namespace> upgrade <release_name> ./ -f ./values.yaml
+helm -n <namespace> upgrade <release_name> ocsinventory/ocsinventory -f ./values.yaml
 ```
 
-## Uninstalling the Chart
+### Uninstalling the Chart
 
 ```bash
-helm delete -n <namespace> <release_name>
+helm uninstall -n <namespace> <release_name>
 kubectl delete ns <namespace>
 ```
 
