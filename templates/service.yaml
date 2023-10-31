@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ocsinventory.fullname" . }}
+  labels:
+    {{- include "ocsinventory.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "ocsinventory.selectorLabels" . | nindent 4 }}

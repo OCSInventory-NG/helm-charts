@@ -1,0 +1,112 @@
+# Values for ocs-inventory.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## Official OCS Inventory image version
+## https://hub.docker.com/r/ocsinventory/ocsinventory-docker-image
+#
+image:
+  repository: ocsinventory/ocsinventory-docker-image
+  pullPolicy: IfNotPresent
+  tag: "2.12.1"
+
+# Number of replicas to be deployed
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: {}
+deploymentAnnotations: {}
+Labels: {}
+
+## PHP configuration
+## https://www.php.net/manual/ini.core.php
+#
+phpconfig:
+  ocsinventory: |
+    upload_max_filesize = 200M
+    post_max_size = 201M
+    max_execution_time = -1
+    max_input_time = -1
+
+## Enable persistence using Persistent Volume Claims
+## https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+#
+persistence:
+  enabled: true
+  size: 10Gi
+  accessMode: ReadWriteOnce
+  # Set storage class here
+  storageClass: ""
+  ##  Use an existing PVC
+  # existingClaim: ""
+  annotations: {}
+
+## External database configuration
+#
+externalDatabase:
+  enabled: false
+  hostname: ""
+  username: ""
+  password: ""
+  database: ""
+
+## Configuration for creating a database on an existing server
+database:
+  create: false
+  jobName: "createdb"
+  hostname: ""
+  username: ""
+  password: ""
+  database: ""
+  root_password: ""
+
+## MariaDB chart configuration
+## create mariadb server and database for OCS
+#
+mariadb:
+  enabled: true
+  jobName: "createmariadbserver"
+  auth:
+    rootPassword: ""
+    database: ""
+    username: ""
+    password: ""
+
+## Allowing use of ingress controllers
+## https://kubernetes.io/docs/concepts/services-networking/ingress/
+#
+ingress:
+  enabled: true
+  labels: {}
+  hosts:
+    - ""
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: 200M
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 300s
+    nginx.ingress.kubernetes.io/proxy-send-timeout: 300s
+    nginx.ingress.kubernetes.io/proxy-read-timeout: 300s
+    cert-manager.io/cluster-issuer: ""
+    nginx.ingress.kubernetes.io/app-root: /ocsreports/
+    # nginx.ingress.kubernetes.io/whitelist-source-range: ""
+  basicauth:
+    enabled: true
+    username: "test"
+    password: "test"
+    authRealm: "Authentication Required"
+    paths:
+      - "/ocsapi"
+      - "/ocsinventory"
+
+## Ressources limits and requests for the container
+## https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+#
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi

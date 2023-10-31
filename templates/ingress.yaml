@@ -1,0 +1,72 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "ocsinventory.fullname" . }}-ocsreports
+  labels:
+    {{- include "ocsinventory.labels" . | nindent 4 }}
+  annotations:
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  tls:
+    - hosts:
+      {{- range .Values.ingress.hosts }}
+        - {{ . }}
+      secretName: {{ . }}-tls
+      {{- end}}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "ocsinventory.fullname" $ }}
+                port:
+                  number: 80
+    {{- end}}
+{{- end }}
+---
+{{- if .Values.ingress.enabled }}
+{{- if .Values.ingress.basicauth.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "ocsinventory.fullname" . }}-basicauth
+  labels:
+    {{- include "ocsinventory.labels" . | nindent 4 }}
+  annotations:
+  {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: {{ template "ocsinventory.fullname" . }}
+    nginx.ingress.kubernetes.io/auth-realm: {{ .Values.ingress.basicauth.authRealm | quote }}
+spec:
+  tls:
+    - hosts:
+      {{- range .Values.ingress.hosts }}
+        - {{ . }}
+      secretName: {{ . }}-tls
+      {{- end}}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+          {{- range $.Values.ingress.basicauth.paths }}
+          - path: {{ . }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "ocsinventory.fullname" $ }}
+                port:
+                  number: 80
+          {{- end }}
+    {{- end}}
+{{- end }}
+{{- end }}

@@ -1,0 +1,85 @@
+{{- if not .Values.externalDatabase.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-jobdb
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  activeDeadlineSeconds: 300
+  backoffLimit: 10
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: {{ .Values.mariadb.jobName }}
+        env:
+        - name: OCS_DB_NAME
+          valueFrom:
+            secretKeyRef:
+                name: {{ template "ocsinventory.fullname" . }}
+                key: db-name
+        - name: OCS_DB_PASS
+          valueFrom:
+            secretKeyRef:
+                name: {{ template "ocsinventory.fullname" . }}
+                key: db-pass
+        - name: OCS_DB_SERVER
+        {{- if .Values.mariadb.enabled }}
+          value: {{ .Release.Name }}-mariadb
+        {{- else }}
+          value: {{.Values.database.hostname }}
+        - name: MARIADB_OCS_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+                name: {{ template "ocsinventory.fullname" . }}
+                key: root-pass
+        {{- end }}
+        - name: OCS_DB_USER
+          valueFrom:
+            secretKeyRef:
+                name: {{ template "ocsinventory.fullname" . }}
+                key: db-user
+        command: ["/bin/bash"]
+        {{ if .Values.mariadb.enabled }}
+        args:
+        - '-c'
+        - |
+          sleep 20;
+          apt update && apt install curl sed -y
+          curl -s -L https://raw.githubusercontent.com/OCSInventory-NG/OCSInventory-Docker-Image/master/{{ .Values.image.tag }}/sql/ocsbase.sql -o ./ocsbase.sql
+          sed -i "s/utf8mb4_0900_ai_ci/utf8_general_ci/g" ocsbase.sql
+          sed -i "s/utf8mb4/utf8/g" ocsbase.sql
+          sed -i "s/utf8mb3/utf8/g" ocsbase.sql
+          mysql -u $OCS_DB_USER --password="$OCS_DB_PASS" -h $OCS_DB_SERVER $OCS_DB_NAME < ocsbase.sql
+        {{- else }}
+        args:
+        - '-c'
+        - |
+          sleep 20;
+          mysql -h $OCS_DB_SERVER -u root -p$MARIADB_OCS_ROOT_PASSWORD -e "CREATE DATABASE $OCS_DB_NAME;"
+          mysql -h $OCS_DB_SERVER -u root -p$MARIADB_OCS_ROOT_PASSWORD -e "CREATE USER $OCS_DB_USER IDENTIFIED BY '$OCS_DB_PASS'"
+          mysql -h $OCS_DB_SERVER -u root -p$MARIADB_OCS_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $OCS_DB_NAME.* TO $OCS_DB_USER WITH GRANT OPTION;"
+          mysql -h $OCS_DB_SERVER -u root -p$MARIADB_OCS_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
+          apt update && apt install curl sed -y
+          curl -s -L https://raw.githubusercontent.com/OCSInventory-NG/OCSInventory-Docker-Image/master/{{ .Values.image.tag }}/sql/ocsbase.sql -o ./ocsbase.sql
+          sed -i "s/utf8mb4_0900_ai_ci/utf8_general_ci/g" ocsbase.sql
+          sed -i "s/utf8mb4/utf8/g" ocsbase.sql
+          sed -i "s/utf8mb3/utf8/g" ocsbase.sql
+          mysql -h $OCS_DB_SERVER -u $OCS_DB_USER -p$OCS_DB_PASS $OCS_DB_NAME < ocsbase.sql
+        {{- end }}
+        image: ubuntu/mysql
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+{{- end }}

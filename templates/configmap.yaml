@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ocsinventory.fullname" . }}-config
+  labels:
+    {{- include "ocsinventory.labels" . | nindent 4 }}
+data:
+  ocsinventory.ini: |
+    {{ .Values.phpconfig.ocsinventory | nindent 4 }}

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ template "ocsinventory.fullname" . }}-test-ocs-connection
+  labels:
+    app.kubernetes.io/name: {{ include "ocsinventory.name" . }}
+    helm.sh/chart: {{ include "ocsinventory.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: test
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  containers:
+  - name: {{ .Release.Name }}-test-ocs-connection
+    image: curlimages/curl
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        curl -XGET http://{{ .Release.Name }}-service:80/
