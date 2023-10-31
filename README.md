@@ -40,7 +40,7 @@ If you have any issues using any other version of Kubernetes / Helm charts, feel
 ## Get the Chart
 
 ```bash
-git clone https://github.com/orgs/OCSInventory-NG/OCSInventory-Helm-Chart
+git clone https://github.com/OCSInventory-NG/helm-charts
 ```
 
 ## Installing the Chart
@@ -112,7 +112,7 @@ Key | Description | Default
 `ingress.enabled` | Enable use of ingress controllers | `true`
 `ingress.hosts` | OCS hosts to create application URLs | `""`
 `ingress.annotations` | An array of ingress annotations | `{}`
-`ingress.basicauth.enabled`  | Wether to enable basic auth | `"true"`
+`ingress.basicauth.enabled`  | Wether to enable basic auth | `"false"`
 `ingress.basicauth.username`  | Username for basic auth | `""`
 `ingress.basicauth.password`  | Password for basic auth | `""`
 `ingress.basicauth.authRealm` | Basic auth directive | `Authentication Required`
