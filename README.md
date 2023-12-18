@@ -121,6 +121,7 @@ Key | Description | Default
 `mariadb.auth.username` | Database user to create | `""`
 `mariadb.auth.password` | Password for the user | `""`
 `ingress.enabled` | Enable use of ingress controllers | `true`
+`ingress.tls` | Create certificates if not exists | `true`
 `ingress.hosts` | OCS hosts to create application URLs | `""`
 `ingress.annotations` | An array of ingress annotations | `{}`
 `ingress.basicauth.enabled`  | Wether to enable basic auth | `"false"`
