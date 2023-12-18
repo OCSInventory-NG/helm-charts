@@ -81,6 +81,7 @@ ingress:
   labels: {}
   hosts:
     - ""
+  tls: true
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
