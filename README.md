@@ -129,6 +129,16 @@ Key | Description | Default
 `ingress.basicauth.authRealm` | Basic auth directive | `Authentication Required`
 `ingress.basicauth.paths` | Paths with basic auth | `/ocsapi` `/ocsinventory`
 `resources` | CPU/Memory resource requests/limits for OCS pod | `{}`
+`metrics.enabled` | Enable metrics| `false`
+`metrics.image.repository` | apache-exporter Image | `docker.io/bitnami/apache-exporter`
+`metrics.image.tag` | Metrics image version | `1.0.3-debian-11-r2`
+`metrics.image.pullPolicy` | Metrics image pull policy | `IfNotPresent`
+`metrics.serviceMonitor.enabled` | Create ServiceMonitor object | `false`
+`metrics.serviceMonitor.label.prometheus` | Prometheus label used for scrapping | `prometheus`
+`metrics.serviceMonitor.label.release` | Release label used for scrapping (should be the prometheus instance name)| `tobedefined`
+`metrics.resources` | CPU/Memory resource requests/limits for apache metrics pod | `{}`
+
+
 
 ## Acknowledgements
 

@@ -73,6 +73,18 @@ spec:
             - mountPath: /etc/php/8.1/apache2/conf.d/ocsinventory.ini
               name: {{ template "ocsinventory.fullname" . }}-config
               subPath: phpconfig
+        {{- if .Values.metrics.enabled }}
+        - name: {{ .Chart.Name }}-apache-metrics
+          image: "{{ .Values.metrics.image.repository }}:{{ .Values.metrics.image.tag }}"
+          imagePullPolicy: {{ .Values.metrics.image.pullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: 9117
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.metrics.resources | nindent 12 }}
+
+        {{- end }}
       volumes:
         - name: {{ template "ocsinventory.fullname" . }}-data
           persistentVolumeClaim:

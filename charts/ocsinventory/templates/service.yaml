@@ -12,3 +12,21 @@ spec:
       name: http
   selector:
     {{- include "ocsinventory.selectorLabels" . | nindent 4 }}
+
+{{- if .Values.metrics.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ocsinventory.fullname" . }}-apache-metrics
+  labels:
+    {{- include "ocsinventory.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 9117
+      targetPort: 9117
+      protocol: TCP
+      name: metrics
+  selector:
+    {{- include "ocsinventory.selectorLabels" . | nindent 4 }}
+{{- end }}
