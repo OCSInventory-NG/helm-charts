@@ -81,6 +81,9 @@ spec:
             - name: metrics
               containerPort: 9117
               protocol: TCP
+          resources:
+            {{- toYaml .Values.metrics.resources | nindent 12 }}
+
         {{- end }}
       volumes:
         - name: {{ template "ocsinventory.fullname" . }}-data
