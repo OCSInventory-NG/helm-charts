@@ -9,6 +9,7 @@ metadata:
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   activeDeadlineSeconds: 300
+  ttlSecondsAfterFinished: 60
   backoffLimit: 10
   completions: 1
   parallelism: 1
