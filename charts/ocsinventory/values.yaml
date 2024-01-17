@@ -112,7 +112,7 @@ resources:
     memory: 256Mi
 
 metrics:
-    enabled: true
+    enabled: false
     image: 
       repository: "docker.io/bitnami/apache-exporter"
       tag: "1.0.3-debian-11-r2"
