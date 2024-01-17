@@ -1,0 +1,23 @@
+
+{{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "ocsinventory.fullname" . }}-apache-service-monitor
+  labels:
+    prometheus: {{ .Values.metrics.serviceMonitor.labels.prometheus }}
+    release: {{ .Values.metrics.serviceMonitor.labels.release }}
+    {{- include "ocsinventory.labels" . | nindent 4 }}    
+spec:
+  endpoints:
+  - port: metrics
+    targetPort: 9117
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "ocsinventory.selectorLabels" . | nindent 6 }}
+{{- end }}
